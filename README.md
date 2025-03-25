@@ -3,9 +3,9 @@
 
 Integrantes:
 
-Daniel Rubio Camargo | RA: 10408823
+Cláudio Dias Alves | RA: 101403569
 
-Cláudio Dias Alves | RA: 101403569 
+Daniel Rubio Camargo | RA: 10408823
 
 Guillermo Kuznietz | RA: 10410134
 
