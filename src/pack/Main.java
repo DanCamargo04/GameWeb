@@ -28,6 +28,8 @@ public class Main {
 		
 		TGrafoND grafoJogos = gerarGrafoAPartirDeArquivo(qtdJogos);
 		
+		grafoJogos.showGND();
+		
 	}
 
 }
