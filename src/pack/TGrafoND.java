@@ -16,27 +16,33 @@ public class TGrafoND {
 		this.m = 0;
 		// alocação da matriz do TGrafoND
 		this.adj = new int[n][n];
-
 		// inicia a matriz com zeros
 		for (int i = 0; i < n; i++)
 			for (int j = 0; j < n; j++)
 				this.adj[i][j] = 0;
 	}
+	
+	// função auxiliar para verificar se o vértice é válido
+    private boolean indiceValido(int v) {
+        return v >= 0 && v < n;
+    }
 
-	// insere uma aresta no Grafo tal que v é adjacente a w e vice versa
-	public void insereAGND(int v, int w) {
+	// insere uma aresta no Grafo tal que v é adjacente a w e vice versa / com peso calculado
+	public void insereAGND(int v, int w, int peso) {
+		if (!indiceValido(v) || !indiceValido(w)) return;
 		// testa se nao temos a aresta
 		if (adj[v][w] == 0) {
-			adj[v][w] = 1;
-			adj[w][v] = 1;
+			adj[v][w] = peso;
+			adj[w][v] = peso;
 			m++; // atualiza qtd arestas
 		}
 	}
 
 	// remove uma aresta v->w e w->v do Grafo
 	public void removeAGND(int v, int w) {
+		if (!indiceValido(v) || !indiceValido(w)) return;
 		// testa se temos a aresta
-		if (adj[v][w] == 1) {
+		if (adj[v][w] != 0) {
 			adj[v][w] = 0;
 			adj[w][v] = 0;
 			m--; // atualiza qtd arestas
@@ -49,21 +55,16 @@ public class TGrafoND {
 		System.out.println("m: " + m);
 		for (int i = 0; i < n; i++) {
 			System.out.print("\n");
-			for (int w = 0; w < n; w++)
-				if (adj[i][w] == 1)
-					System.out.print("Adj[" + i + "," + w + "]= 1" + " ");
+			for (int j = 0; j < n; j++)
+				if (adj[i][j] != 0)
+					System.out.print("Adj[" + i + "," + j + "]= " + adj[i][j] + " ");
 				else
-					System.out.print("Adj[" + i + "," + w + "]= 0" + " ");
+					System.out.print("Adj[" + i + "," + j + "]= 0" + " ");
 		}
-		System.out.println("\n\nFim da impressao do grafo!\n");
+		System.out.println("\nFim da impressao do Grafo!\n");
 	}
 	
 	// MÉTODOS NOVOS |------------------------------------------------------------------------------------------|
-	
-	// função auxiliar para verificar se o vértice é válido
-    private boolean indiceValido(int v) {
-        return v >= 0 && v < n;
-    }
 
     // verifica o grau do grafo
 	public int degreeGND(int v) {		
@@ -108,19 +109,6 @@ public class TGrafoND {
 	    n--;
 	}
 	
-	// cria o complemento do Grafo
-	public TGrafoND complementoGND() {
-	    TGrafoND complemento = new TGrafoND(this.n);
-	    for (int i = 0; i < n; i++) {
-	        for (int j = i + 1; j < n; j++) {
-	            if (this.adj[i][j] == 0) {
-	                complemento.insereAGND(i, j);
-	            }
-	        }
-	    }
-	    return complemento;
-	}
-	
 	// retorna o tipo de conexidade do Grafo (1 -> Conexo / 0 -> Desconexo)
 	public int tipoConexidade() {
 	    boolean[] visitado = new boolean[n];
@@ -134,7 +122,7 @@ public class TGrafoND {
 	private void verificaVertice(int v, boolean[] visitado) {
 	    visitado[v] = true;
 	    for (int i = 0; i < n; i++) {
-	        if (adj[v][i] == 1 && !visitado[i]) {
+	        if (adj[v][i] != 0 && !visitado[i]) {
 	            verificaVertice(i, visitado);
 	        }
 	    }

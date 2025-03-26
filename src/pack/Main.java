@@ -2,16 +2,31 @@
  * Cláudio Dias Alves (101403569) 
  * Daniel Rubio Camargo (10408823)
  * Guillermo Kuznietz (10410134)
- * 
  */
 
 package pack;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 public class Main {
 
+	public static TGrafoND gerarGrafoAPartirDeArquivo(int n) {
+		
+		TGrafoND g = new TGrafoND(n);
+		
+		// LOGICA DE PASSAR O TXT PRA UM GRAFO
+		
+		return g;
+		
+	}
+	
 	public static void main(String[] args) {
 		
-		System.out.println("Teste");
+		final int qtdJogos = 61;
+		
+		TGrafoND grafoJogos = gerarGrafoAPartirDeArquivo(qtdJogos);
 		
 	}
 
