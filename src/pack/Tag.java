@@ -14,6 +14,11 @@ public enum Tag {
 	ZUMBI,  
 	ANIME,  
 	SANDBOX,  
-	PUZZLE;
-	
+	SIMULACAO,  
+	PUZZLE,  
+	HACKNSLASH,  
+	DIFICIL,  
+	MUSICA,  
+	COMEDIA;
+
 }
