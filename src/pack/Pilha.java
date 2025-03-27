@@ -43,8 +43,7 @@ public class Pilha {
 			System.out.println("overflow - Estouro de Pilha");
 	}
 
-	// remove um elemento
-	// do topo da pilha
+	// remove um elemento do topo da pilha
 	public int pop() {
 		if (!this.isEmpty())
 			return this.e[this.topoPilha--];
