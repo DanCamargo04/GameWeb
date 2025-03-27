@@ -53,7 +53,7 @@ public class Pilha {
 		}
 	}
 
-	// Retorna o elemento que está no topo da pilha
+	// retorna o elemento que está no topo da pilha
 	public int topo() {
 		if (!this.isEmpty())
 			return this.e[this.topoPilha];
