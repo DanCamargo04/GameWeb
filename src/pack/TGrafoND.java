@@ -50,18 +50,26 @@ public class TGrafoND {
 	}
 
 	// apresenta o Grafo contendo número de vértices, arestas e a matriz de adjacência obtida
-	public void showGND() {
-		System.out.println("n: " + n);
+	public void showGND(boolean mostrarSimples) {
+		System.out.println("\nn: " + n);
 		System.out.println("m: " + m);
 		for (int i = 0; i < n; i++) {
 			System.out.print("\n");
 			for (int j = 0; j < n; j++)
-				if (adj[i][j] != 0)
-					System.out.print("Adj[" + i + "," + j + "]= " + adj[i][j] + " ");
-				else
-					System.out.print("Adj[" + i + "," + j + "]= 0" + " ");
+				if(mostrarSimples) {
+					if (adj[i][j] != 0)
+						System.out.print(adj[i][j] + " ");
+					else
+						System.out.print("00" + " ");
+				}
+				else {
+					if (adj[i][j] != 0)
+						System.out.print("Adj[" + i + "," + j + "]= " + adj[i][j] + " ");
+					else
+						System.out.print("Adj[" + i + "," + j + "]= 0" + " ");
+				}
 		}
-		System.out.println("\nFim da impressao do Grafo!\n");
+		System.out.println("\n\nFim da impressao do Grafo!\n");
 	}
 	
 	// MÉTODOS NOVOS |------------------------------------------------------------------------------------------|
