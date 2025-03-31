@@ -19,6 +19,7 @@ public class Main {
 	static int numTipoGrafo;
 	public static Node nodes[];
 
+	// gera o grafo a partir do txt fornecido
 	public static TGrafoND gerarGrafoAPartirDeArquivo() {
 		
 		TGrafoND g = null;
@@ -89,7 +90,7 @@ public class Main {
 	    return g;
 	}
 
-
+	// mostra o menu
 	public static void menu() {
 		System.out.print("\nMenu:\n\n" + "1 - Ler dados do arquivo grafo.txt\n" +
 						"2 - Gravar dados no arquivo grafo.txt\n" + 
@@ -130,6 +131,7 @@ public class Main {
 		
 	}
 	
+	// mostra todas as arestas criadas
 	public static void mostrarArestas(TGrafoND g) {
 		
 		for(int i = 0; i < n; i++) {
@@ -159,7 +161,7 @@ public class Main {
 		for(int i = 0; i < 6; i++) {
 			for(int j = 0; j < 6; j++) {
 				if(nodes[v1].getTags()[i] == nodes[v2].getTags()[j] && nodes[v1].getTags()[i] != Tag.NENHUMA) {
-					peso+=15;
+					peso+=5; // só calcula se for igual e não for repetido
 					break;
 				}
 			}
@@ -210,33 +212,51 @@ public class Main {
 				break;
 				
 			case 3: // OK
-				System.out.println("Digite o nome do jogo:");
+				System.out.print("\nDigite o nome do jogo: ");
 			    String nome = scv.nextLine();
 
-			    System.out.println("Digite a publicadora:");
+			    System.out.print("Digite a publicadora: ");
 			    String pub = scv.nextLine();
 
-			    System.out.println("Digite o modo de jogo (SOLO ou MULTIPLAYER):");
-			    ModoDeJogo modo = ModoDeJogo.valueOf(scv.nextLine().toUpperCase());
+			    Scanner sm = new Scanner(System.in);
+			    
+			    int opcaoModo = -1;
+			    while(opcaoModo < 1 || opcaoModo > 4) {
+			    	System.out.print("\nDigite o modo de jogo:\n"
+			    			+ "1 - SINGLEPLAYER\n"
+			    			+ "2 - MULTIPLAYER\n"
+			    			+ "3 - MISTO\n"
+			    			+ "4 - SAIR\n");
+			    	System.out.print("Opção: ");
+			    	opcaoModo = sc.nextInt();
+			    }
+			    if(opcaoModo == 4) break;
+			    
+			    String[] modos = {"SINGLEPLAYER", "MULTIPLAYER", "MISTO"};
+			    
+			    ModoDeJogo modo = ModoDeJogo.valueOf(modos[opcaoModo-1]);
+			    
+			    System.out.println("\nModo de Jogo selecionado: " + modos[opcaoModo-1]);
 
 			    List<Tag> novasTags = new ArrayList<>();
-			    System.out.println("Digite até 6 tags (ou 'fim' para parar):");
+			    System.out.println("\nDigite até 6 tags (ou 'fim' para parar): ");
 			    while (novasTags.size() < 6) {
 			        String tagStr = scv.nextLine();
 			        if (tagStr.equalsIgnoreCase("fim")) break;
 			        try {
 			            Tag tag = Tag.valueOf(tagStr.replace("-", "_").toUpperCase());
 			            novasTags.add(tag);
-			        } catch (IllegalArgumentException e) {
+			        } 
+			        catch (IllegalArgumentException e) {
 			            System.out.println("Tag inválida ignorada.");
 			        }
 			    }
 
-			    // Preenche com NENHUMA se tiver menos de 6
+			    // preenche com NENHUMA se tiver menos de 6
 			    while (novasTags.size() < 6) novasTags.add(Tag.NENHUMA);
 			    Tag[] tags = novasTags.toArray(new Tag[6]);
 
-			    // Redimensiona o array de nodes
+			    // redimensiona o array de nodes
 			    Node[] novoNodes = new Node[n + 1];
 			    for (int i = 0; i < n; i++) novoNodes[i] = nodes[i];
 			    novoNodes[n] = new Node(n, nome, pub, modo, tags);
@@ -244,14 +264,14 @@ public class Main {
 
 			    grafoJogos.insereVerticeGND();
 
-			    // Calcula arestas para o novo vértice
+			    // calcula arestas para o novo vértice
 			    for (int i = 0; i < n; i++) {
 			        int peso = calcularPeso(i, n);
 			        if (verificarPeso(peso)) {
 			            grafoJogos.insereAGND(i, n, peso, false);
 			        }
 			    }
-			    n++; // Atualiza contador de nós
+			    n++; // atualiza contador de nós
 			    System.out.println("Novo vértice e arestas inseridas com sucesso!\n");
 			    break;
 				
@@ -302,7 +322,12 @@ public class Main {
 				break;
 				
 			case 9:
-				System.out.println("\nConexidade: " + grafoJogos.tipoConexidade() + "\n");
+				if(grafoJogos.tipoConexidade() == 0) {
+					System.out.println("\nConexidade: DESCONEXO\n");
+				}
+				else {
+					System.out.println("\nConexidade: CONEXO\n");
+				}		
 				/*TGrafoND grafoReduzido = grafoJogos.gerarGrafoReduzido();
 				System.out.println("Grafo Reduzido\n");
 				grafoReduzido.showGND(true);
