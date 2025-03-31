@@ -9,7 +9,11 @@ public class TGrafoND {
 	private int adj[][]; // matriz de adjacência
 
 	// Métodos Públicos
-	
+
+	public int[][] getAdj() {
+		return adj;
+	}
+
 	public TGrafoND(int n) { // construtor
 		this.n = n;
 		// no início dos tempos não há arestas
@@ -21,48 +25,58 @@ public class TGrafoND {
 			for (int j = 0; j < n; j++)
 				this.adj[i][j] = 0;
 	}
-	
-	// função auxiliar para verificar se o vértice é válido
-    private boolean indiceValido(int v) {
-        return v >= 0 && v < n;
-    }
 
-	// insere uma aresta no Grafo tal que v é adjacente a w e vice versa / com peso calculado
-	public void insereAGND(int v, int w, int peso) {
-		if (!indiceValido(v) || !indiceValido(w)) return;
+	// função auxiliar para verificar se o vértice é válido
+	private boolean indiceValido(int v) {
+		return v >= 0 && v < n;
+	}
+
+	// insere uma aresta no Grafo tal que v é adjacente a w e vice versa / com peso
+	// calculado
+	public void insereAGND(int v, int w, int peso, boolean mostraMensagem) {
+		if (!indiceValido(v) || !indiceValido(w))
+			return;
 		// testa se nao temos a aresta
 		if (adj[v][w] == 0) {
 			adj[v][w] = peso;
 			adj[w][v] = peso;
 			m++; // atualiza qtd arestas
+			if (mostraMensagem)
+				System.out.println("Aresta inserida com sucesso!\n");
+		} else {
+			System.out.println("Já existe essa aresta!\n");
 		}
 	}
 
 	// remove uma aresta v->w e w->v do Grafo
 	public void removeAGND(int v, int w) {
-		if (!indiceValido(v) || !indiceValido(w)) return;
+		if (!indiceValido(v) || !indiceValido(w))
+			return;
 		// testa se temos a aresta
 		if (adj[v][w] != 0) {
 			adj[v][w] = 0;
 			adj[w][v] = 0;
 			m--; // atualiza qtd arestas
+			System.out.println("Remoção de aresta concluída!\n");
+		} else {
+			System.out.println("Não existe essa aresta!\n");
 		}
 	}
 
-	// apresenta o Grafo contendo número de vértices, arestas e a matriz de adjacência obtida
+	// apresenta o Grafo contendo número de vértices, arestas e a matriz de
+	// adjacência obtida
 	public void showGND(boolean mostrarSimples) {
 		System.out.println("\nn: " + n);
 		System.out.println("m: " + m);
 		for (int i = 0; i < n; i++) {
 			System.out.print("\n");
 			for (int j = 0; j < n; j++)
-				if(mostrarSimples) {
+				if (mostrarSimples) {
 					if (adj[i][j] != 0)
 						System.out.print(adj[i][j] + " ");
 					else
 						System.out.print("00" + " ");
-				}
-				else {
+				} else {
 					if (adj[i][j] != 0)
 						System.out.print("Adj[" + i + "," + j + "]= " + adj[i][j] + " ");
 					else
@@ -71,19 +85,21 @@ public class TGrafoND {
 		}
 		System.out.println("\n\nFim da impressao do Grafo!\n");
 	}
-	
-	// MÉTODOS NOVOS |------------------------------------------------------------------------------------------|
 
-    // verifica o grau do grafo
-	public int degreeGND(int v) {		
-		if (!indiceValido(v)) return -1;
-        int grau = 0;    
-        for (int i = 0; i < n; i++) {
-            if (adj[v][i] != 0) {
-                grau++;
-            }
-        }    
-        return grau;
+	// MÉTODOS NOVOS
+	// |------------------------------------------------------------------------------------------|
+
+	// verifica o grau do grafo
+	public int degreeGND(int v) {
+		if (!indiceValido(v))
+			return -1;
+		int grau = 0;
+		for (int i = 0; i < n; i++) {
+			if (adj[v][i] != 0) {
+				grau++;
+			}
+		}
+		return grau;
 	}
 
 	// verifica se o Grafo é completo
@@ -98,42 +114,67 @@ public class TGrafoND {
 		return true;
 	}
 
-	// remove vértice do Grafo e reorganiza o Grafo
-	public void removeVerticeGND(int v) {	
-		if (!indiceValido(v)) return;	
-	    int novaAdj[][] = new int[n - 1][n - 1];
-	    int novoI = 0, novoJ;
-	    for (int i = 0; i < n; i++) {
-	        if (i == v) continue;
-	        novoJ = 0;
-	        for (int j = 0; j < n; j++) {
-	            if (j == v) continue;
-	            novaAdj[novoI][novoJ] = adj[i][j];
-	            novoJ++;
-	        }
-	        novoI++;
-	    }
-	    adj = novaAdj;
-	    n--;
+	public void insereVerticeGND() {
+		int novoN = n + 1;
+		int[][] novaAdj = new int[novoN][novoN];
+
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				novaAdj[i][j] = adj[i][j];
+			}
+		}
+
+		this.n = novoN;
+		this.adj = novaAdj;
+		System.out.println("Novo vértice adicionado com sucesso ao grafo!\n");
 	}
-	
+
+	// remove vértice do Grafo e reorganiza o Grafo
+	public void removeVerticeGND(int v) {
+		if (!indiceValido(v))
+			return;
+
+		int novaAdj[][] = new int[n - 1][n - 1];
+		int novoI = 0, novoJ;
+		for (int i = 0; i < n; i++) {
+			if (i == v)
+				continue;
+			novoJ = 0;
+			for (int j = 0; j < n; j++) {
+				if (j == v)
+					continue;
+				novaAdj[novoI][novoJ] = adj[i][j];
+				novoJ++;
+			}
+			novoI++;
+		}
+		adj = novaAdj;
+		n--;
+		System.out.println("Vértice " + v + " removido com sucesso!\n");
+	}
+
 	// retorna o tipo de conexidade do Grafo (1 -> Conexo / 0 -> Desconexo)
 	public int tipoConexidade() {
-	    boolean[] visitado = new boolean[n];
-	    verificaVertice(0, visitado);
-	    for (boolean v : visitado) {
-	        if (!v) return 0;
-	    }
-	    return 1;
+		boolean[] visitado = new boolean[n];
+		verificaVertice(0, visitado);
+		for (boolean v : visitado) {
+			if (!v)
+				return 0;
+		}
+		return 1;
 	}
 
 	private void verificaVertice(int v, boolean[] visitado) {
-	    visitado[v] = true;
-	    for (int i = 0; i < n; i++) {
-	        if (adj[v][i] != 0 && !visitado[i]) {
-	            verificaVertice(i, visitado);
-	        }
-	    }
+		visitado[v] = true;
+		for (int i = 0; i < n; i++) {
+			if (adj[v][i] != 0 && !visitado[i]) {
+				verificaVertice(i, visitado);
+			}
+		}
 	}
+
+	//public TGrafoND gerarGrafoReduzido() {
+		// IMPLEMENTAR
+	//}
 
 }
