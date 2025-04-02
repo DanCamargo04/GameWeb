@@ -1,7 +1,7 @@
 package pack;
 
 public enum Tag {
-	NENHUMA,
+    NENHUMA,
     ACAO,  
     AVENTURA,  
     RPG,  
