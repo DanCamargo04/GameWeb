@@ -126,7 +126,7 @@ public class Main {
 
 	// mostra o menu
 	public static void menu() {
-		System.out.print("Menu:\n" + 
+		System.out.print("Menu:\n\n" + 
 					"1 - Ler dados do arquivo grafo.txt\n" +
 					"2 - Gravar dados no arquivo grafo.txt\n" + 
 					"3 - Inserir vértice\n" + 
@@ -136,7 +136,7 @@ public class Main {
 					"7 - Mostrar conteúdo do arquivo\n" +
 					"8 - Mostrar Grafo\n"+
 					"9 - Apresentar a conexidade do Grafo e o Reduzido\n" + 
-					"10 - Encerrar aplicação\n"+
+					"10 - Encerrar aplicação\n\n"+
 					"Escolha sua opção: ");
 	}
 	
