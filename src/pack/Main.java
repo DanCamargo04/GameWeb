@@ -6,9 +6,7 @@
 
 package pack;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -90,19 +88,56 @@ public class Main {
 	    return g;
 	}
 
+	// grava o grafo no arquivo
+	public static void gravarGrafoNoArquivo(TGrafoND g) {
+	    try (BufferedWriter bw = new BufferedWriter(new FileWriter("src/pack/grafo.txt"))) {
+	        // escreve o tipo do grafo
+	        bw.write(numTipoGrafo + "\n");
+	        
+	        // escreve a quantidade de vértices
+	        bw.write(n + "\n");
+	        
+	        // escreve os vértices
+	        for (int i = 0; i < n; i++) {
+	            Node node = nodes[i];
+	            bw.write(node.getIndice() + ";" + node.getNome() + ";" + node.getPublicadora() + ";" + node.getModoDeJogo());
+	            for (Tag tag : node.getTags()) {
+	                bw.write(";" + tag);
+	            }
+	            bw.write("\n");
+	        }
+	        // escreve a quantidade de arestas
+	        int qtdArestas = g.contarArestas();
+	        bw.write(qtdArestas + "\n");
+	        
+	        // escreve as arestas
+	        for (int i = 0; i < n; i++) {
+	            for (int j = i + 1; j < n; j++) {
+	                if (g.getAdj()[i][j] != 0) {
+	                    bw.write(i + "-" + j + ";" + g.getAdj()[i][j] + "\n");
+	                }
+	            }
+	        }
+	        System.out.println("\nGrafo salvo com sucesso!\n");
+	    } catch (IOException e) {
+	        System.err.println("\nErro ao salvar o arquivo: " + e.getMessage() + "\n");
+	    }
+	}
+
 	// mostra o menu
 	public static void menu() {
-		System.out.print("\nMenu:\n\n" + "1 - Ler dados do arquivo grafo.txt\n" +
-						"2 - Gravar dados no arquivo grafo.txt\n" + 
-				"3 - Inserir vértice\n" + 
-				"4 - Inserir aresta\n" + 
-				"5 - Remover vértice\n" + 
-				"6 - Remover aresta\n"+
-				"7 - Mostrar conteúdo do arquivo\n" +
-				"8 - Mostrar Grafo\n"+
-				"9 - Apresentar a conexidade do Grafo e o Reduzido\n" + 
-				"10 - Encerrar aplicação\n\n"+
-				"Escolha sua opção: ");
+		System.out.print("Menu:\n" + 
+					"1 - Ler dados do arquivo grafo.txt\n" +
+					"2 - Gravar dados no arquivo grafo.txt\n" + 
+					"3 - Inserir vértice\n" + 
+					"4 - Inserir aresta\n" + 
+					"5 - Remover vértice\n" + 
+					"6 - Remover aresta\n"+
+					"7 - Mostrar conteúdo do arquivo\n" +
+					"8 - Mostrar Grafo\n"+
+					"9 - Apresentar a conexidade do Grafo e o Reduzido\n" + 
+					"10 - Encerrar aplicação\n"+
+					"Escolha sua opção: ");
 	}
 	
 	// retorna o tipo do grafo
@@ -194,7 +229,7 @@ public class Main {
 			opcao = sc.nextInt();
 			
 			if(!foiCarregado && opcao > 1){
-				System.out.println("\nGrafo NÃO carregado!");
+				System.out.println("\nGrafo NÃO carregado!\n");
 				continue;
 			}
 
@@ -204,11 +239,11 @@ public class Main {
 				grafoJogos = gerarGrafoAPartirDeArquivo();
 				foiCarregado = true;
 				tipoConexidade = grafoJogos.tipoConexidade();
-				System.out.println("\nGrafo carregado com sucesso!");
+				System.out.println("\nGrafo carregado com sucesso!\n");
 				break;
 				
-			case 2:
-				// GRAVAR DADOS NO ARQUIVO
+			case 2: // OK
+				gravarGrafoNoArquivo(grafoJogos);
 				break;
 				
 			case 3: // OK
