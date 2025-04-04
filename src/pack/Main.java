@@ -106,6 +106,7 @@ public class Main {
 	            }
 	            bw.write("\n");
 	        }
+	        
 	        // escreve a quantidade de arestas
 	        int qtdArestas = g.contarArestas();
 	        bw.write(qtdArestas + "\n");
@@ -118,15 +119,16 @@ public class Main {
 	                }
 	            }
 	        }
-	        System.out.println("\nGrafo salvo com sucesso!\n");
+	        
+	        System.out.println("Grafo salvo com sucesso!");
 	    } catch (IOException e) {
-	        System.err.println("\nErro ao salvar o arquivo: " + e.getMessage() + "\n");
+	        System.err.println("Erro ao salvar o arquivo: " + e.getMessage());
 	    }
 	}
 
 	// mostra o menu
 	public static void menu() {
-		System.out.print("Menu:\n\n" + 
+		System.out.print("\nMenu:\n" + 
 					"1 - Ler dados do arquivo grafo.txt\n" +
 					"2 - Gravar dados no arquivo grafo.txt\n" + 
 					"3 - Inserir vértice\n" + 
@@ -242,7 +244,8 @@ public class Main {
 				System.out.println("\nGrafo carregado com sucesso!\n");
 				break;
 				
-			case 2: // OK
+			case 2:
+				// GRAVAR DADOS NO ARQUIVO
 				gravarGrafoNoArquivo(grafoJogos);
 				break;
 				
@@ -250,7 +253,7 @@ public class Main {
 				System.out.print("\nDigite o nome do jogo: ");
 			    String nome = scv.nextLine();
 
-			    System.out.print("Digite a publicadora: ");
+			    System.out.print("\nDigite a publicadora: ");
 			    String pub = scv.nextLine();
 
 			    Scanner sm = new Scanner(System.in);
@@ -283,7 +286,7 @@ public class Main {
 			            novasTags.add(tag);
 			        } 
 			        catch (IllegalArgumentException e) {
-			            System.out.println("Tag inválida ignorada.");
+			            System.out.println("\nTag inválida ignorada.");
 			        }
 			    }
 
@@ -307,7 +310,7 @@ public class Main {
 			        }
 			    }
 			    n++; // atualiza contador de nós
-			    System.out.println("Novo vértice e arestas inseridas com sucesso!\n");
+			    System.out.println("\nNovo vértice e arestas inseridas com sucesso!\n");
 			    break;
 				
 			case 4: // OK
@@ -319,26 +322,39 @@ public class Main {
 				int peso = calcularPeso(iva1, iva2);
 				//System.out.println("Peso: \n" + peso);
 				if(!verificarPeso(peso)) {
-					System.out.println("O peso calculado é menor do que o necessário para criar uma aresta!\n");
+					System.out.println("\nO peso calculado é menor do que o necessário para criar uma aresta!\n");
 					break;
 				}
 				grafoJogos.insereAGND(iva1, iva2, peso, true);
+				System.out.print("\nAresta adicionada com sucesso!");
 				break;
 				
 			case 5: // OK
-				System.out.print("Qual vértice deseja remover?: ");
-				int rv1 = scv.nextInt();
-				grafoJogos.removeVerticeGND(rv1); 
-				break;
+				try {
+					System.out.println("\nQual vértice deseja remover? (Exemplo:'1')");
+					System.out.print("Vértice: ");
+					int rv1 = scv.nextInt();
+					grafoJogos.removeVerticeGND(rv1); 
+					System.out.print("\nVértice removido com sucesso!\n");
+					break;
+				} catch (IllegalArgumentException e) {
+					System.out.println("\nVértice inválido\n");
+					break;
+				}
 				
 			case 6: // OK
-				System.out.println("Qual aresta deseja remover?\n");
-				System.out.print("Vértice 1: ");
-				int ra1 = scv.nextInt();
-				System.out.print("Vértice 2: ");
-				int ra2 = scv2.nextInt();
-				grafoJogos.removeAGND(ra1, ra2);
-				break;
+				try {
+					System.out.println("\nQual aresta deseja remover? (Exm V1:'1' V2:'2')\n");
+					System.out.print("Vértice 1: ");
+					int ra1 = scv.nextInt();
+					System.out.print("Vértice 2: ");
+					int ra2 = scv2.nextInt();
+					grafoJogos.removeAGND(ra1, ra2);
+					break;
+				} catch (IllegalArgumentException e) {
+					System.out.println("\nVértices inválidos\n");
+					break;
+				}
 				
 			case 7: // OK
 				String tipoGrafo = tipoGrafo(numTipoGrafo);
@@ -373,7 +389,7 @@ public class Main {
 				break; // finalizar
 				
 			default: // OK
-				System.out.println("Opção inválida!");
+				System.out.println("\nOpção inválida!");
 				break;
 			}
 		}

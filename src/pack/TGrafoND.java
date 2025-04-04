@@ -41,7 +41,7 @@ public class TGrafoND {
 	    int count = 0;
 	    
 	    for (int i = 0; i < this.n; i++) {
-	        for (int j = i + 1; j < this.n; j++) { // Apenas metade superior da matriz para evitar contagens duplas
+	        for (int j = i + 1; j < this.n; j++) { // apenas metade superior da matriz para evitar contagens duplas já que é simétrico
 	            if (this.adj[i][j] != 0) {
 	                count++;
 	            }
@@ -53,7 +53,7 @@ public class TGrafoND {
 
 	public void gravarDados() {
 	    try (BufferedWriter writer = new BufferedWriter(new FileWriter("grafo.txt"))) {
-	        writer.write(n + "\n"); // Salva o número de vértices
+	        writer.write(n + "\n"); // salva o número de vértices
 	        for (int i = 0; i < n; i++) {
 	            for (int j = 0; j < n; j++) {
 	                writer.write(adj[i][j] + " ");
@@ -118,36 +118,34 @@ public class TGrafoND {
 	// apresenta o Grafo contendo número de vértices, arestas e a matriz de
 	// adjacência obtida
 	public void showGND(boolean mostrarSimples) {
-	    System.out.print("\n     "); // Espaço para alinhar as colunas
-	    for (int i = 1; i <= n; i++) {
-	        System.out.print(String.format("%2d ", i));  // Cabeçalho das colunas com duas casas
+	    System.out.print("\n     "); 
+	    for (int i = 0; i <= n; i++) {
+	        System.out.print(String.format("%2d ", i));  
 	    }
-	    System.out.println(); // Nova linha após o cabeçalho
+	    System.out.println();
 
-	    // Imprime uma linha de separação
 	    System.out.print("     ");
 	    for (int i = 0; i < n; i++) {
-	        System.out.print("__ "); // Separadores de colunas
+	        System.out.print("__ "); 
 	    }
-	    System.out.println(); // Nova linha após os separadores
+	    System.out.println(); 
 
-	    // Imprime as linhas do grafo com o número da linha na frente
 	    for (int i = 0; i < n; i++) {
-	        System.out.print(String.format("%2d | ", i + 1));  // Número da linha com duas casas
+	        System.out.print(String.format("%2d | ", i));  
 	        for (int j = 0; j < n; j++) {
 	            if (mostrarSimples) {
 	                if (adj[i][j] != 0)
-	                    System.out.print(String.format("%2d ", adj[i][j]));  // Formato com duas casas
+	                    System.out.print(String.format("%2d ", adj[i][j]));  
 	                else
-	                    System.out.print("00 "); // Formato de zero com duas casas
+	                    System.out.print("00 "); 
 	            } else {
 	                if (adj[i][j] != 0)
-	                    System.out.print(String.format("Adj[%2d,%2d]=%2d ", i + 1, j + 1, adj[i][j]));  // Formato com duas casas
+	                    System.out.print(String.format("Adj[%2d,%2d]=%2d ", i + 1, j + 1, adj[i][j]));  
 	                else
-	                    System.out.print(String.format("Adj[%2d,%2d]= 0 ", i + 1, j + 1));  // Formato de zero com duas casas
+	                    System.out.print(String.format("Adj[%2d,%2d]= 0 ", i + 1, j + 1));  
 	            }
 	        }
-	        System.out.println();  // Nova linha após cada linha do grafo
+	        System.out.println(); 
 	    }
 	    System.out.println("\nFim da impressao do Grafo!\n");
 	}
