@@ -119,7 +119,7 @@ public class TGrafoND {
 	// adjacência obtida
 	public void showGND(boolean mostrarSimples) {
 	    System.out.print("\n     "); 
-	    for (int i = 0; i <= n; i++) {
+	    for (int i = 0; i < n; i++) {
 	        System.out.print(String.format("%2d ", i));  
 	    }
 	    System.out.println();

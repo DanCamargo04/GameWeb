@@ -54,7 +54,7 @@ public class Main {
 	                    Tag tag = Tag.valueOf(partes[j].replace("-", "_").toUpperCase());
 	                    tagsList.add(tag); 
 	                } catch (IllegalArgumentException e) {
-	                    System.out.println("Tag inválida ignorada: " + partes[j]);
+	                    System.out.println("\nTag inválida ignorada: " + partes[j]);
 	                }
 	            }
 
@@ -82,7 +82,7 @@ public class Main {
 	        }
 	    } 
 	    catch (IOException | NumberFormatException e) {
-	        System.err.println("Erro ao ler o arquivo: " + e.getMessage());
+	        System.err.println("\nErro ao ler o arquivo: " + e.getMessage());
 	    }
 
 	    return g;
@@ -119,10 +119,9 @@ public class Main {
 	                }
 	            }
 	        }
-	        
-	        System.out.println("Grafo salvo com sucesso!");
+	        System.out.println("\nGrafo salvo com sucesso!");
 	    } catch (IOException e) {
-	        System.err.println("Erro ao salvar o arquivo: " + e.getMessage());
+	        System.err.println("\nErro ao salvar o arquivo: " + e.getMessage());
 	    }
 	}
 
@@ -244,8 +243,7 @@ public class Main {
 				System.out.println("\nGrafo carregado com sucesso!\n");
 				break;
 				
-			case 2:
-				// GRAVAR DADOS NO ARQUIVO
+			case 2: // OK
 				gravarGrafoNoArquivo(grafoJogos);
 				break;
 				
@@ -337,7 +335,8 @@ public class Main {
 					grafoJogos.removeVerticeGND(rv1); 
 					System.out.print("\nVértice removido com sucesso!\n");
 					break;
-				} catch (IllegalArgumentException e) {
+				} 
+				catch (IllegalArgumentException e) {
 					System.out.println("\nVértice inválido\n");
 					break;
 				}
@@ -351,7 +350,8 @@ public class Main {
 					int ra2 = scv2.nextInt();
 					grafoJogos.removeAGND(ra1, ra2);
 					break;
-				} catch (IllegalArgumentException e) {
+				} 
+				catch (IllegalArgumentException e) {
 					System.out.println("\nVértices inválidos\n");
 					break;
 				}
@@ -372,7 +372,7 @@ public class Main {
 				grafoJogos.showGND(true);
 				break;
 				
-			case 9:
+			case 9: // OK
 				if(grafoJogos.tipoConexidade() == 0) {
 					System.out.println("\nConexidade: DESCONEXO\n");
 				}
