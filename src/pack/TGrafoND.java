@@ -1,186 +1,50 @@
 package pack;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.FileReader;
-import java.io.BufferedReader;
-
-// GRAFO NÃO DIRIGIDO(ORIENTADO) COM PESO NAS ARESTAS
-
 public class TGrafoND {
 
-	private int n; // quantidade de vértices
-	private int m; // quantidade de arestas
-	private int adj[][]; // matriz de adjacência
-
-	// Métodos Públicos
+	private int n;
+	private int m;
+	private int adj[][];
 
 	public int[][] getAdj() {
 		return adj;
 	}
 
-	public TGrafoND(int n) { // construtor
+	public TGrafoND(int n) {
 		this.n = n;
-		// no início dos tempos não há arestas
 		this.m = 0;
-		// alocação da matriz do TGrafoND
 		this.adj = new int[n][n];
-		// inicia a matriz com zeros
+
 		for (int i = 0; i < n; i++)
 			for (int j = 0; j < n; j++)
 				this.adj[i][j] = 0;
 	}
 
-	// função auxiliar para verificar se o vértice é válido
 	private boolean indiceValido(int v) {
 		return v >= 0 && v < n;
 	}
-	
+
 	public int contarArestas() {
 	    int count = 0;
-	    
 	    for (int i = 0; i < this.n; i++) {
-	        for (int j = i + 1; j < this.n; j++) { // apenas metade superior da matriz para evitar contagens duplas já que é simétrico
+	        for (int j = i + 1; j < this.n; j++) {
 	            if (this.adj[i][j] != 0) {
 	                count++;
 	            }
 	        }
 	    }
-
 	    return count;
 	}
 
-	public void gravarDados() {
-	    try (BufferedWriter writer = new BufferedWriter(new FileWriter("grafo.txt"))) {
-	        writer.write(n + "\n"); // salva o número de vértices
-	        for (int i = 0; i < n; i++) {
-	            for (int j = 0; j < n; j++) {
-	                writer.write(adj[i][j] + " ");
-	            }
-	            writer.newLine();
-	        }
-	        System.out.println("Grafo salvo com sucesso!");
-	    } catch (IOException e) {
-	        System.out.println("Erro ao salvar o grafo: " + e.getMessage());
-	    }
+	public int getNumeroArestas() {
+		return this.m;
 	}
 
-	public void carregarDados() {
-	    try (BufferedReader reader = new BufferedReader(new FileReader("grafo.txt"))) {
-	        n = Integer.parseInt(reader.readLine().trim());
-	        adj = new int[n][n]; // Recria a matriz de adjacência
-	        for (int i = 0; i < n; i++) {
-	            String[] linha = reader.readLine().split(" ");
-	            for (int j = 0; j < n; j++) {
-	                adj[i][j] = Integer.parseInt(linha[j]);
-	            }
-	        }
-	        System.out.println("Grafo carregado do arquivo!");
-	    } catch (IOException e) {
-	        System.out.println("Arquivo de grafo não encontrado, iniciando novo grafo.");
-	    }
+	public boolean verificarPeso(int peso) {
+		return peso >= 15;
 	}
 
-
-	// insere uma aresta no Grafo tal que v é adjacente a w e vice versa / com peso
-	// calculado
-	public void insereAGND(int v, int w, int peso, boolean mostraMensagem) {
-		if (!indiceValido(v) || !indiceValido(w))
-			return;
-		// testa se nao temos a aresta
-		if (adj[v][w] == 0) {
-			adj[v][w] = peso;
-			adj[w][v] = peso;
-			m++; // atualiza qtd arestas
-			if (mostraMensagem)
-				System.out.println("Aresta inserida com sucesso!\n");
-		} else {
-			System.out.println("Já existe essa aresta!\n");
-		}
-	}
-
-	// remove uma aresta v->w e w->v do Grafo
-	public void removeAGND(int v, int w) {
-		if (!indiceValido(v) || !indiceValido(w))
-			return;
-		// testa se temos a aresta
-		if (adj[v][w] != 0) {
-			adj[v][w] = 0;
-			adj[w][v] = 0;
-			m--; // atualiza qtd arestas
-			System.out.println("Remoção de aresta concluída!\n");
-		} else {
-			System.out.println("Não existe essa aresta!\n");
-		}
-	}
-
-	// apresenta o Grafo contendo número de vértices, arestas e a matriz de
-	// adjacência obtida
-	public void showGND(boolean mostrarSimples) {
-	    System.out.print("\n     "); 
-	    for (int i = 0; i < n; i++) {
-	        System.out.print(String.format("%2d ", i));  
-	    }
-	    System.out.println();
-
-	    System.out.print("     ");
-	    for (int i = 0; i < n; i++) {
-	        System.out.print("__ "); 
-	    }
-	    System.out.println(); 
-
-	    for (int i = 0; i < n; i++) {
-	        System.out.print(String.format("%2d | ", i));  
-	        for (int j = 0; j < n; j++) {
-	            if (mostrarSimples) {
-	                if (adj[i][j] != 0)
-	                    System.out.print(String.format("%2d ", adj[i][j]));  
-	                else
-	                    System.out.print("00 "); 
-	            } else {
-	                if (adj[i][j] != 0)
-	                    System.out.print(String.format("Adj[%2d,%2d]=%2d ", i + 1, j + 1, adj[i][j]));  
-	                else
-	                    System.out.print(String.format("Adj[%2d,%2d]= 0 ", i + 1, j + 1));  
-	            }
-	        }
-	        System.out.println(); 
-	    }
-	    System.out.println("\nFim da impressao do Grafo!\n");
-	}
-
-
-
-	// MÉTODOS NOVOS
-	// |------------------------------------------------------------------------------------------|
-
-	// verifica o grau do grafo
-	public int degreeGND(int v) {
-		if (!indiceValido(v))
-			return -1;
-		int grau = 0;
-		for (int i = 0; i < n; i++) {
-			if (adj[v][i] != 0) {
-				grau++;
-			}
-		}
-		return grau;
-	}
-
-	// verifica se o Grafo é completo
-	public boolean eCompletoGND() {
-		for (int i = 0; i < n; i++) {
-			for (int j = 0; j < n; j++) {
-				if (i != j && adj[i][j] == 0) {
-					return false;
-				}
-			}
-		}
-		return true;
-	}
-
-	public void insereVerticeGND() {
+	public void insereVGND() {
 		int novoN = n + 1;
 		int[][] novaAdj = new int[novoN][novoN];
 
@@ -192,11 +56,23 @@ public class TGrafoND {
 
 		this.n = novoN;
 		this.adj = novaAdj;
-		System.out.println("Novo vértice adicionado com sucesso ao grafo!\n");
+
+		System.out.println("Novo vértice adicionado com sucesso ao grafo!");
+		System.out.println("Número do novo vértice: " + (n - 1) + "\n");
 	}
 
-	// remove vértice do Grafo e reorganiza o Grafo
-	public void removeVerticeGND(int v) {
+	public void insereAGND(int v1, int v2, int peso, boolean mostrar) {
+	    if (adj[v1][v2] == 0 && adj[v2][v1] == 0) {
+	        m++;
+	    }
+	    adj[v1][v2] = peso;
+	    adj[v2][v1] = peso;
+	    if (mostrar) {
+	        System.out.println("Aresta inserida entre " + v1 + " e " + v2 + " com peso " + peso + "\n");
+	    }
+	}
+
+	public void removeVGND(int v) {
 		if (!indiceValido(v))
 			return;
 
@@ -219,7 +95,98 @@ public class TGrafoND {
 		System.out.println("Vértice " + v + " removido com sucesso!\n");
 	}
 
-	// retorna o tipo de conexidade do Grafo (1 -> Conexo / 0 -> Desconexo)
+	public void removeAGND(int v, int w) {
+		if (!indiceValido(v) || !indiceValido(w))
+			return;
+		if (adj[v][w] != 0) {
+			adj[v][w] = 0;
+			adj[w][v] = 0;
+			m--;
+			System.out.println("Remoção de aresta concluída!\n");
+		} else {
+			System.out.println("Não existe essa aresta!\n");
+		}
+	}
+
+	public void showGND(boolean mostrarSimples) {
+	    System.out.print("     ");
+	    for (int i = 0; i < n; i++) {
+	        System.out.print(String.format("%2d ", i));
+	    }
+	    System.out.println();
+
+	    System.out.print("     ");
+	    for (int i = 0; i < n; i++) {
+	        System.out.print("__ ");
+	    }
+	    System.out.println();
+
+	    for (int i = 0; i < n; i++) {
+	        System.out.print(String.format("%2d | ", i));
+	        for (int j = 0; j < n; j++) {
+	            if (mostrarSimples) {
+	                if (adj[i][j] != 0)
+	                    System.out.print(String.format("%2d ", adj[i][j]));
+	                else
+	                    System.out.print("00 ");
+	            } else {
+	                if (adj[i][j] != 0)
+	                    System.out.print(String.format("Adj[%2d,%2d]=%2d ", i + 1, j + 1, adj[i][j]));
+	                else
+	                    System.out.print(String.format("Adj[%2d,%2d]= 0 ", i + 1, j + 1));
+	            }
+	        }
+	        System.out.println();
+	    }
+	    System.out.println();
+	}
+
+	public String tipoGrafo(int tipo) {
+		switch (tipo) {
+		case 0:
+			return "Grafo não orientado sem peso";
+		case 1:
+			return "Grafo não orientado com peso no vértice";
+		case 2:
+			return "Grafo não orientado com peso na aresta";
+		case 3:
+			return "Grafo não orientado com peso nos vértices e arestas";
+		case 4:
+			return "Grafo orientado sem peso";
+		case 5:
+			return "Grafo orientado com peso no vértice";
+		case 6:
+			return "Grafo orientado com peso na aresta";
+		case 7:
+			return "Grafo orientado com peso nos vértices e arestas";
+		default:
+			return "Não encontrado!\n";
+		}
+	}
+
+	public int degreeGND(int v) {
+		if (!indiceValido(v))
+			return -1;
+		int grau = 0;
+		for (int i = 0; i < n; i++) {
+			if (adj[v][i] != 0) {
+				grau++;
+			}
+		}
+		return grau;
+	}
+
+	public boolean eCompletoGND() {
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				if (i != j && adj[i][j] == 0) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
 	public int tipoConexidade() {
 		boolean[] visitado = new boolean[n];
 		verificaVertice(0, visitado);
@@ -239,8 +206,93 @@ public class TGrafoND {
 		}
 	}
 
-	//public TGrafoND gerarGrafoReduzido() {
-		// IMPLEMENTAR
-	//}
+	public boolean ehConexo() {
+	    boolean[] visitado = new boolean[n];
+	    dfs(0, visitado);
+	    for (boolean v : visitado) {
+	        if (!v) return false;
+	    }
+	    return true;
+	}
 
+	private void dfs(int v, boolean[] visitado) {
+	    visitado[v] = true;
+	    for (int i = 0; i < n; i++) {
+	        if (adj[v][i] != 0 && !visitado[i]) {
+	            dfs(i, visitado);
+	        }
+	    }
+	}
+
+	public int classificarGrafoDirecionado() {
+	    boolean[] visitado = new boolean[n];
+	    dfs(0, visitado);
+	    boolean fracamenteConexo = true;
+	    
+	    for (boolean v : visitado) {
+	        if (!v) {
+	            fracamenteConexo = false;
+	            break;
+	        }
+	    }
+	    
+	    if (fracamenteConexo) {
+	        boolean[] visitadoReverso = new boolean[n];
+	        TGrafoND grafoTransposto = this.getTransposto();
+	        grafoTransposto.dfs(0, visitadoReverso);
+	        
+	        for (boolean v : visitadoReverso) {
+	            if (!v) return 1; // C1 - Fracamente conexo
+	        }
+	        return 3; // C3 - Fortemente conexo
+	    }
+	    
+	    return 0; // C0 - Desconexo
+	}
+
+	private TGrafoND getTransposto() {
+	    TGrafoND transposto = new TGrafoND(n);
+	    for (int i = 0; i < n; i++) {
+	        for (int j = 0; j < n; j++) {
+	            if (adj[i][j] != 0) {
+	                transposto.adj[j][i] = adj[i][j];
+	            }
+	        }
+	    }
+	    return transposto;
+	}
+
+	public TGrafoND gerarGrafoReduzidoFCONEX() {
+	    boolean[] visitado = new boolean[n];
+	    int[] componente = new int[n];
+	    int compId = 0;
+	    
+	    for (int i = 0; i < n; i++) {
+	        if (!visitado[i]) {
+	            marcarComponente(i, visitado, componente, compId);
+	            compId++;
+	        }
+	    }
+	    
+	    TGrafoND grafoReduzido = new TGrafoND(compId);
+	    for (int i = 0; i < n; i++) {
+	        for (int j = 0; j < n; j++) {
+	            if (adj[i][j] != 0 && componente[i] != componente[j]) {
+	                grafoReduzido.adj[componente[i]][componente[j]] = 1;
+	            }
+	        }
+	    }
+	    
+	    return grafoReduzido;
+	}
+
+	private void marcarComponente(int v, boolean[] visitado, int[] componente, int compId) {
+	    visitado[v] = true;
+	    componente[v] = compId;
+	    for (int i = 0; i < n; i++) {
+	        if (adj[v][i] != 0 && !visitado[i]) {
+	            marcarComponente(i, visitado, componente, compId);
+	        }
+	    }
+	}
 }
