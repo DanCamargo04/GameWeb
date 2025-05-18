@@ -151,6 +151,16 @@ public class Main {
 			nodes[i].setDegree(gnd.degreeGND(i));
 		}
 	}
+	
+	public static String retornarClassificacaoDoGrau(int degree) {
+		if(degree < 5) {
+			return "BAIXO";
+		}
+		else if(degree < 15) {
+			return "MEDIO";
+		}
+		return "ALTO";
+	}
 
 	public static void main(String[] args) {
 		// int tipoConexidade = 0;
@@ -325,7 +335,8 @@ public class Main {
 				case 10:
 					System.out.println("Graus de todos os jogos:");
 					for(int i = 0; i < n; i++) {
-						System.out.println("Grau do jogo " + nodes[i].getNome() + ": " + nodes[i].getDegree());
+						String classificacao = retornarClassificacaoDoGrau(nodes[i].getDegree());
+						System.out.println("Classificação do jogo " + nodes[i].getNome() + ": " + classificacao);
 					}
 					System.out.println();
 					break;
