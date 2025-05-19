@@ -262,37 +262,4 @@ public class TGrafoND {
 	    return transposto;
 	}
 
-	public TGrafoND gerarGrafoReduzidoFCONEX() {
-	    boolean[] visitado = new boolean[n];
-	    int[] componente = new int[n];
-	    int compId = 0;
-	    
-	    for (int i = 0; i < n; i++) {
-	        if (!visitado[i]) {
-	            marcarComponente(i, visitado, componente, compId);
-	            compId++;
-	        }
-	    }
-	    
-	    TGrafoND grafoReduzido = new TGrafoND(compId);
-	    for (int i = 0; i < n; i++) {
-	        for (int j = 0; j < n; j++) {
-	            if (adj[i][j] != 0 && componente[i] != componente[j]) {
-	                grafoReduzido.adj[componente[i]][componente[j]] = 1;
-	            }
-	        }
-	    }
-	    
-	    return grafoReduzido;
-	}
-
-	private void marcarComponente(int v, boolean[] visitado, int[] componente, int compId) {
-	    visitado[v] = true;
-	    componente[v] = compId;
-	    for (int i = 0; i < n; i++) {
-	        if (adj[v][i] != 0 && !visitado[i]) {
-	            marcarComponente(i, visitado, componente, compId);
-	        }
-	    }
-	}
 }

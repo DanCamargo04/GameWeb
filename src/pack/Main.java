@@ -7,9 +7,9 @@ import java.util.Scanner;
 
 public class Main {
 	
-	static int n;
-	static int numTipoGrafo;
-	public static Node nodes[];
+	static int n; // dimensão da matriz
+	static int numTipoGrafo; // tipo do grafo
+	public static List<Node> nodes = new ArrayList<>(); // lista dos jogos
 
 	public static TGrafoND lerDadosDoArquivo() {
 		
@@ -26,7 +26,7 @@ public class Main {
 	        n = Integer.parseInt(linha);
 	        
 	        g = new TGrafoND(n);
-		    nodes = new Node[n];
+	        nodes.clear();
 
 	        for (int i = 0; i < n; i++) {
 	            linha = br.readLine();
@@ -48,9 +48,12 @@ public class Main {
 	                }
 	            }
 
-	            Tag[] tags = tagsList.toArray(new Tag[0]);
+	            Tag[] tags = tagsList.toArray(new Tag[6]);
+	            for (int k = tagsList.size(); k < 6; k++) {
+	                tags[k] = Tag.NENHUMA;
+	            }
 
-	            nodes[indice] = new Node(indice, nome, publicadora, modo, tags);
+	            nodes.add(new Node(indice, nome, publicadora, modo, tags));
 	        }
 
 	        linha = br.readLine();
@@ -84,7 +87,7 @@ public class Main {
 	        bw.write(n + "\n");
 
 	        for (int i = 0; i < n; i++) {
-	            Node node = nodes[i];
+	            Node node = nodes.get(i);
 	            bw.write(node.getIndice() + ";" + node.getNome() + ";" + node.getPublicadora() + ";" + node.getModoDeJogo());
 	            for (Tag tag : node.getTags()) {
 	                bw.write(";" + tag);
@@ -104,7 +107,8 @@ public class Main {
 	        }
 	        
 	        System.out.println("Grafo salvo com sucesso!\n");
-	    } catch (IOException e) {
+	    } 
+	    catch (IOException e) {
 	        System.err.println("Erro ao salvar o arquivo: " + e.getMessage() + "\n");
 	    }
 	}
@@ -116,7 +120,7 @@ public class Main {
 	                String iFormatado = String.format("%02d", i);
 	                String jFormatado = String.format("%02d", j);
 	                System.out.println("[" + iFormatado + "][" + jFormatado + "] -> " + 
-	                    nodes[i].getNome() + " e " + nodes[j].getNome());
+	                    nodes.get(i).getNome() + " e " + nodes.get(j).getNome());
 	            }
 	        }
 	    }
@@ -126,17 +130,17 @@ public class Main {
 		
 		int peso = 0;
 		
-		if(nodes[v1].getPublicadora() == nodes[v2].getPublicadora()) {
+		if(nodes.get(v1).getPublicadora() == nodes.get(v2).getPublicadora()) {
 			peso+=2;
 		}
 		
-		if(nodes[v1].getModoDeJogo() == nodes[v2].getModoDeJogo()) {
+		if(nodes.get(v1).getModoDeJogo() == nodes.get(v2).getModoDeJogo()) {
 			peso++;
 		}
 		
 		for(int i = 0; i < 6; i++) {
 			for(int j = 0; j < 6; j++) {
-				if(nodes[v1].getTags()[i] == nodes[v2].getTags()[j] && nodes[v1].getTags()[i] != Tag.NENHUMA) {
+				if(nodes.get(v1).getTags()[i] == nodes.get(v2).getTags()[j] && nodes.get(v1).getTags()[i] != Tag.NENHUMA) {
 					peso+=5;
 					break;
 				}
@@ -148,7 +152,7 @@ public class Main {
 	
 	public static void carregarGraus(TGrafoND gnd) {
 		for(int i = 0; i < n; i++) {
-			nodes[i].setDegree(gnd.degreeGND(i));
+			nodes.get(i).setDegree(gnd.degreeGND(i));
 		}
 	}
 	
@@ -161,20 +165,21 @@ public class Main {
 		}
 		return "ALTO";
 	}
+	
+	public static boolean eVerticeValido(int v) {
+		return v >= 0 && v < n;
+	}
 
 	public static void main(String[] args) {
-		// int tipoConexidade = 0;
 		boolean foiCarregado = false;
-
 		TGrafoND grafoJogos = null;
-		
 		int opcao = -1;
 		Scanner sc = new Scanner(System.in);
 		Scanner scv = new Scanner(System.in);
 		Scanner scv2 = new Scanner(System.in);
 
 		while (opcao != 11) {
-			System.out.print("Menu:\n" + 
+			System.out.print("Menu:\n" +
 					"01 - Ler dados do arquivo grafo.txt\n" +
 					"02 - Gravar dados no arquivo grafo.txt\n" + 
 					"03 - Inserir vértice\n" + 
@@ -184,177 +189,213 @@ public class Main {
 					"07 - Mostrar conteúdo do arquivo\n" +
 					"08 - Mostrar Grafo\n"+
 					"09 - Apresentar a conexidade do Grafo e o Reduzido\n" + 
-					"10 - Encerrar aplicação\n"+
+					"10 - Mostrar a classificação do grau de conexões dos jogos\n" +
+					"11 - Encerrar aplicação\n"+
 					"Escolha sua opção: ");
 			try {
 				opcao = sc.nextInt();
-			}
-			catch(Exception e) {
+			} catch(Exception e) {
 				System.out.println("Erro ao informar opção!\n");
-				System.exit(0);
+				break;
 			}
-			
+
 			if(!foiCarregado && opcao > 1 && opcao < 11){
 				System.out.println("Grafo não carregado!\n");
 				continue;
 			}
 
 			switch (opcao) {
-				case 1:
+				case 1: // ler dados do arquivo
 					grafoJogos = lerDadosDoArquivo();
 					carregarGraus(grafoJogos);
 					foiCarregado = true;
 					break;
-					
-				case 2:
+
+				case 2: // gravar dados no arquivo
 					gravarDadosNoArquivo(grafoJogos);
 					break;
-					
-				case 3:
+
+				case 3: // adicionar novo jogo
 					System.out.print("Digite o nome do jogo: ");
-				    String nome = scv.nextLine();
-	
-				    System.out.print("Digite a publicadora: ");
-				    String pub = scv.nextLine();
-				    
-				    int opcaoModo = -1;
-				    while(opcaoModo < 1 || opcaoModo > 4) {
-				    	System.out.print("1) SINGLEPLAYER\n" +
-				    					 "2) MULTIPLAYER\n" +
-				    					 "3) MISTO\n");
-				    	System.out.print("Digite a opção do modo de jogo: ");
-				    	try {
-				    		opcaoModo = sc.nextInt();
-				    	}catch(Exception e) {
-				    		System.out.println("\nErro ao informar opção!\n");
-				    		System.exit(0);
-				    	}
-				    	
-				    }
-				    
-				    String[] modos = {"SINGLEPLAYER", "MULTIPLAYER", "MISTO"};
-				    
-				    ModoDeJogo modo = ModoDeJogo.valueOf(modos[opcaoModo-1]);
-	
-				    List<Tag> novasTags = new ArrayList<>();
-				    System.out.println("Digite até 6 tags (ou 'fim' para parar): ");
-				    while (novasTags.size() < 6) {
-				        String tagStr = scv.nextLine();
-				        if (tagStr.equalsIgnoreCase("fim")) break;
-				        try {
-				            Tag tag = Tag.valueOf(tagStr.replace("-", "_").toUpperCase());
-				            novasTags.add(tag);
-				        } 
-				        catch (IllegalArgumentException e) {
-				            System.out.println("Tag inválida ignorada.");
-				        }
-				    }
-	
-				    while (novasTags.size() < 6) novasTags.add(Tag.NENHUMA);
-				    Tag[] tags = novasTags.toArray(new Tag[6]);
-	
-				    Node[] novoNodes = new Node[n + 1];
-				    for (int i = 0; i < n; i++) novoNodes[i] = nodes[i];
-				    novoNodes[n] = new Node(n, nome, pub, modo, tags);
-				    nodes = novoNodes;
-	
-				    grafoJogos.insereVGND();
-	
-				    n++;
-				    break;
+					String nome = scv.nextLine();
+
+					System.out.print("Digite a publicadora: ");
+					String pub = scv.nextLine();
+
+					boolean error3 = false;
+					int opcaoModo = -1;
+					while(opcaoModo < 1 || opcaoModo > 4) {
+						System.out.print("1) SINGLEPLAYER\n" +
+								"2) MULTIPLAYER\n" +
+								"3) MISTO\n");
+						System.out.print("Digite a opção do modo de jogo: ");
+						try {
+							opcaoModo = sc.nextInt();
+						} catch(Exception e) {
+							System.out.println("\nErro ao informar opção!\n");
+							error3 = true;
+							break;
+						}
+					}
+
+					if(error3) break;
 					
-				case 4:
+					String[] modos = {"SINGLEPLAYER", "MULTIPLAYER", "MISTO"};
+					ModoDeJogo modo = ModoDeJogo.valueOf(modos[opcaoModo-1]);
+
+					List<Tag> novasTags = new ArrayList<>();
+					System.out.println("Digite até 6 tags (ou 'fim' para parar): ");
+					while (novasTags.size() < 6) {
+						String tagStr = scv.nextLine();
+						if (tagStr.equalsIgnoreCase("fim")) break;
+						try {
+							Tag tag = Tag.valueOf(tagStr.replace("-", "_").toUpperCase());
+							novasTags.add(tag);
+						} catch (IllegalArgumentException e) {
+							System.out.println("Tag inválida ignorada.");
+						}
+					}
+
+					while (novasTags.size() < 6) novasTags.add(Tag.NENHUMA);
+					Tag[] tags = novasTags.toArray(new Tag[6]);
+
+					nodes.add(new Node(nodes.size(), nome, pub, modo, tags));
+					grafoJogos.insereVGND();
+					n = nodes.size();
+					break;
+
+				case 4: // adicionar arestas
 					System.out.print("Vértice a ser conectado: ");
-					int iva1 = scv.nextInt();
+					int iva1 = -1;
+					try {
+						iva1 = scv.nextInt();
+					}
+					catch(Exception e) {
+						System.out.println("Valor inválido!\n");
+						break;
+					}
+					if(!eVerticeValido(iva1)) {
+						System.out.println("Índice não encontrado!\n");
+						break;
+					}
 					for(int i = 0; i < n; i++) {
 						int peso = calcularPeso(iva1, i);
 						if(grafoJogos.verificarPeso(peso) && i != iva1) {
 							grafoJogos.insereAGND(iva1, i, peso, false);
-							nodes[iva1].setDegree(nodes[iva1].getDegree()+1);
-							nodes[i].setDegree(nodes[i].getDegree()+1);
+							nodes.get(iva1).setDegree(nodes.get(iva1).getDegree()+1);
+							nodes.get(i).setDegree(nodes.get(i).getDegree()+1);
 						}
 					}
+					System.out.println("Arestas conectadas no vértice " + iva1 + "!\n");
 					break;
-					
-				case 5: // Arrumar
+
+				case 5: // remover vértice
 					System.out.print("Digite o vértice que deseja remover: ");
-					int rv1 = scv.nextInt();
-					grafoJogos.removeVGND(rv1); 
+					int rv1 = -1;
+					try {
+						rv1 = scv.nextInt();
+					}
+					catch(Exception e) {
+						System.out.println("Valor inválido!\n");
+						break;
+					}
+					if(!eVerticeValido(rv1)) {
+						System.out.println("Índice não encontrado!\n");
+						break;
+					}
+					grafoJogos.removeVGND(rv1);
+					nodes.remove(rv1);
+					n = nodes.size();
 					break;
-					
-				case 6:
+
+				case 6: // remover aresta
 					System.out.println("Qual aresta deseja remover?");
 					System.out.print("Vértice 1: ");
-					int ra1 = scv.nextInt();
+					int ra1 = -1;
+					try {
+						ra1 = scv.nextInt();
+					}
+					catch(Exception e) {
+						System.out.println("Valor inválido!\n");
+						break;
+					}
+					if(!eVerticeValido(ra1)) {
+						System.out.println("Índice não encontrado!\n");
+						break;
+					}
 					System.out.print("Vértice 2: ");
-					int ra2 = scv2.nextInt();
+					int ra2 = -1;
+					try {
+						ra2 = scv.nextInt();
+					}
+					catch(Exception e) {
+						System.out.println("Valor inválido!\n");
+						break;
+					}
+					if(!eVerticeValido(ra2)) {
+						System.out.println("Índice não encontrado!\n");
+						break;
+					}
 					grafoJogos.removeAGND(ra1, ra2);
 					break;
-					
-				case 7:
+
+				case 7: // mostrar dados do arquivo
 					String tipoGrafo = grafoJogos.tipoGrafo(numTipoGrafo);
 					System.out.println("Tipo do Grafo: " + tipoGrafo + "\n");
 					System.out.println("Vértices:");
 					for (int i = 0; i < n; i++) {
-					    String iFormatado = String.format("%02d", i);
-					    System.out.println(iFormatado + " - " + nodes[i].getNome());
+						String iFormatado = String.format("%02d", i);
+						System.out.println(iFormatado + " - " + nodes.get(i).getNome());
 					}
 					System.out.println("Arestas:");
 					mostrarArestas(grafoJogos);
 					System.out.println("");
 					break;
-					
-				case 8:
+
+				case 8: // mostrar Grafo
 					grafoJogos.showGND(true);
 					break;
-					
-				case 9:
-				    if (numTipoGrafo >= 0 && numTipoGrafo <= 3) {
-				        boolean conexo = grafoJogos.ehConexo();
-				        System.out.println("Conexidade: " + (conexo ? "CONEXO" : "DESCONEXO") + "\n");
-				    } 
-				    else {
-				        int categoria = grafoJogos.classificarGrafoDirecionado();
-				        String categoriaStr = switch (categoria) {
-				            case 3 -> "C3 - Fortemente conexo";
-				            case 2 -> "C2 - Unilateralmente conexo";
-				            case 1 -> "C1 - Fracamente conexo";
-				            default -> "C0 - Desconexo";
-				        };
-	
-				        System.out.println("Conexidade: " + categoriaStr + "\n");
-	
-				        if (categoria > 0) {
-				            TGrafoND grafoReduzido = grafoJogos.gerarGrafoReduzidoFCONEX();
-				            System.out.println("Grafo Reduzido (FCONEX):\n");
-				            grafoReduzido.showGND(true);
-				        }
-				    }
-				    break;
-	
-				case 10:
-					System.out.println("Graus de todos os jogos:");
+
+				case 9: // mostrar conexidade
+					if (numTipoGrafo >= 0 && numTipoGrafo <= 3) {
+						boolean conexo = grafoJogos.ehConexo();
+						System.out.println("Conexidade: " + (conexo ? "CONEXO" : "DESCONEXO") + "\n");
+					} 
+					else {
+						int categoria = grafoJogos.classificarGrafoDirecionado();
+						String categoriaStr = switch (categoria) {
+							case 3 -> "C3 - Fortemente conexo";
+							case 2 -> "C2 - Unilateralmente conexo";
+							case 1 -> "C1 - Fracamente conexo";
+							default -> "C0 - Desconexo";
+						};
+						System.out.println("Conexidade: " + categoriaStr + "\n");
+					}
+					break;
+
+				case 10: // mostrar a classificação do grau dos jogos
+					System.out.println("Classificação dos graus de todos os jogos:");
 					for(int i = 0; i < n; i++) {
-						String classificacao = retornarClassificacaoDoGrau(nodes[i].getDegree());
-						System.out.println("Classificação do jogo " + nodes[i].getNome() + ": " + classificacao);
+						String classificacao = retornarClassificacaoDoGrau(nodes.get(i).getDegree());
+						System.out.println("Classificação do grau do jogo " + nodes.get(i).getNome() + ": " + classificacao);
 					}
 					System.out.println();
 					break;
-					
-				case 11:
+
+				case 11: // finalizar programa
 					break;
-					
+
 				default:
 					System.out.println("Opção inválida!\n");
 					break;
 			}
 		}
-		
+
 		sc.close();
 		scv.close();
 		scv2.close();
-
-		System.out.println("Programa finalizado!\n");
+		
+		System.out.println("\nPrograma finalizado!\n");
 	}
 
 }
