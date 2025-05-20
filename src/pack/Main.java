@@ -377,7 +377,7 @@ public class Main {
 					System.out.println("Classificação dos graus de todos os jogos:");
 					for(int i = 0; i < n; i++) {
 						String classificacao = retornarClassificacaoDoGrau(nodes.get(i).getDegree());
-						System.out.println(nodes.get(i).getNome() + ": " + classificacao);
+						System.out.println(nodes.get(i).getNome() + ": " + classificacao + " (" + nodes.get(i).getDegree() + ")");
 					}
 					System.out.println();
 					break;
