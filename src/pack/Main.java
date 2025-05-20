@@ -161,7 +161,7 @@ public class Main {
 			return "BAIXO";
 		}
 		else if(degree < 15) {
-			return "MEDIO";
+			return "MÉDIO";
 		}
 		return "ALTO";
 	}
@@ -377,7 +377,7 @@ public class Main {
 					System.out.println("Classificação dos graus de todos os jogos:");
 					for(int i = 0; i < n; i++) {
 						String classificacao = retornarClassificacaoDoGrau(nodes.get(i).getDegree());
-						System.out.println("Classificação do grau do jogo " + nodes.get(i).getNome() + ": " + classificacao);
+						System.out.println(nodes.get(i).getNome() + ": " + classificacao);
 					}
 					System.out.println();
 					break;
