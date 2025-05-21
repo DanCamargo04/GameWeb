@@ -178,7 +178,7 @@ public class Main {
 		Scanner scv = new Scanner(System.in);
 		Scanner scv2 = new Scanner(System.in);
 
-		while (opcao != 11) {
+		while (opcao != 14) {
 			System.out.print("Menu:\n" +
 					"01 - Ler dados do arquivo grafo.txt\n" +
 					"02 - Gravar dados no arquivo grafo.txt\n" + 
@@ -189,8 +189,11 @@ public class Main {
 					"07 - Mostrar conteúdo do arquivo\n" +
 					"08 - Mostrar Grafo\n"+
 					"09 - Apresentar a conexidade do Grafo e o Reduzido\n" + 
-					"10 - Mostrar a classificação do grau de conexões dos jogos\n" +
-					"11 - Encerrar aplicação\n"+
+					"10 - Mostrar jogos relacionados\n" + 
+					"11 - Mostrar a classificação do grau de conexões dos jogos\n" +
+					"12 - Verifica se possui caminho euleriano\n"+
+					"13 - Verifica coloração de vértices \n"+
+					"14 - Encerrar aplicação\n"+
 					"Escolha sua opção: ");
 			try {
 				opcao = sc.nextInt();
@@ -199,7 +202,7 @@ public class Main {
 				break;
 			}
 
-			if(!foiCarregado && opcao > 1 && opcao < 11){
+			if(!foiCarregado && opcao > 1 && opcao < 14){
 				System.out.println("Grafo não carregado!\n");
 				continue;
 			}
@@ -341,7 +344,7 @@ public class Main {
 
 				case 7: // mostrar dados do arquivo
 					String tipoGrafo = grafoJogos.tipoGrafo(numTipoGrafo);
-					System.out.println("Tipo do Grafo: " + tipoGrafo + "\n");
+					System.out.println("Tipo do Grafo: " + tipoGrafo);
 					System.out.println("Vértices:");
 					for (int i = 0; i < n; i++) {
 						String iFormatado = String.format("%02d", i);
@@ -372,8 +375,35 @@ public class Main {
 						System.out.println("Conexidade: " + categoriaStr + "\n");
 					}
 					break;
+					
+				case 10: // verifica jogos mais parecidos
+					
+					System.out.print("Insira o vértice do jogo: ");
+					int v;
+					try {
+						v = sc.nextInt();
+					}
+					catch(Exception e) {
+						System.out.println("Opção inválida!\n");
+						break;
+					}
+					int vet[] = grafoJogos.getRelatedGames(v);
+					String games[] = {"não econtrado","não econtrado","não econtrado"};
+					int curr = 0;
+					for(int i = 0; i < 3; i++) {
+						if(vet[i] != -1) {
+							games[curr++] = nodes.get(vet[i]).getNome();
+						}
+					}
+					
+					System.out.println("Jogos relacionados com o jogo " + nodes.get(v).getNome() + ":\n" +
+										"1 - " + games[0] + "\n" + 
+										"2 - " + games[1] + "\n" + 
+										"3 - " + games[2] + "\n");
+					
+					break;
 
-				case 10: // mostrar a classificação do grau dos jogos
+				case 11: // mostrar a classificação do grau dos jogos
 					System.out.println("Classificação dos graus de todos os jogos:");
 					for(int i = 0; i < n; i++) {
 						String classificacao = retornarClassificacaoDoGrau(nodes.get(i).getDegree());
@@ -381,8 +411,22 @@ public class Main {
 					}
 					System.out.println();
 					break;
-
-				case 11: // finalizar programa
+					
+				case 12: // verifica se possui caminho euleriano
+				    if (grafoJogos.caminhoEuleriano()) {
+				        System.out.println("O grafo POSSUI caminho Euleriano.\n");
+				    }
+				    else {
+				        System.out.println("O grafo NAO POSSUI caminho Euleriano.\n");
+				    }
+				    break;
+				    
+				case 13: // verifica coloração de vértices 
+				    grafoJogos.colorirVertices();
+				    System.out.println();
+				    break;
+				    
+				case 14: // finalizar programa
 					break;
 
 				default:
@@ -395,7 +439,7 @@ public class Main {
 		scv.close();
 		scv2.close();
 		
-		System.out.println("\nPrograma finalizado!\n");
+		System.out.println("Programa finalizado!\n");
 	}
 
 }

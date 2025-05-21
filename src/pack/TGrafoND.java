@@ -1,5 +1,7 @@
 package pack;
 
+import java.util.Arrays;
+
 public class TGrafoND {
 
 	private int n;
@@ -175,6 +177,23 @@ public class TGrafoND {
 		}
 		return grau;
 	}
+	
+	public boolean caminhoEuleriano() {
+	    int qtde = 0;
+	    for (int i = 0; i < n; i++) {
+	        int grau = 0;
+	        for (int j = 0; j < n; j++) {
+	            grau += adj[i][j];
+	        }
+	        if (grau % 2 == 1) {
+	            qtde++;
+	        }
+	        if (qtde > 2) {
+	            return false;
+	        }
+	    }
+	    return true;
+	}
 
 	public boolean eCompletoGND() {
 		for (int i = 0; i < n; i++) {
@@ -214,6 +233,38 @@ public class TGrafoND {
 	    }
 	    return true;
 	}
+	
+	public void colorirVertices() {
+	    int[] cores = new int[n];
+	    Arrays.fill(cores, -1);
+
+	    boolean[] disponivel = new boolean[n];
+
+	    cores[0] = 0;
+
+	    for (int u = 1; u < n; u++) {
+	        Arrays.fill(disponivel, true);
+
+	        for (int v = 0; v < n; v++) {
+	            if (adj[u][v] != 0 && cores[v] != -1) {
+	                disponivel[cores[v]] = false;
+	            }
+	        }
+
+	        for (int cor = 0; cor < n; cor++) {
+	            if (disponivel[cor]) {
+	                cores[u] = cor;
+	                break;
+	            }
+	        }
+	    }
+
+	    System.out.println("Coloração dos vértices:");
+	    for (int i = 0; i < n; i++) {
+	        System.out.println("Vértice " + i + " --> Cor " + cores[i]);
+	    }
+	}
+
 
 	private void dfs(int v, boolean[] visitado) {
 	    visitado[v] = true;
@@ -261,5 +312,29 @@ public class TGrafoND {
 	    }
 	    return transposto;
 	}
+	
+	public int[] getRelatedGames(int v) {
+	    int vetVal[] = {0, 0, 0};      // valores das 3 maiores conexões
+	    int vetInd[] = {-1, -1, -1};   // índices dos vértices correspondentes
+	    
+	    for (int i = 0; i < n; i++) {
+	        int val = adj[v][i];
+	        
+	        int minIndex = 0;
+	        for (int j = 1; j < 3; j++) {
+	            if (vetVal[j] < vetVal[minIndex]) {
+	                minIndex = j;
+	            }
+	        }
+	        
+	        if (val > vetVal[minIndex]) {
+	            vetVal[minIndex] = val;
+	            vetInd[minIndex] = i;
+	        }
+	    }
+	    
+	    return vetInd;
+	}
+
 
 }
