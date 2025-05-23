@@ -190,7 +190,7 @@ public class Main {
 					"08 - Mostrar Grafo\n"+
 					"09 - Apresentar a conexidade do Grafo e o Reduzido\n" + 
 					"10 - Mostrar jogos relacionados\n" + 
-					"11 - Mostrar a classificação do grau de conexões dos jogos\n" +
+					"11 - (SOLUÇÃO) Mostrar a classificação do grau de conexões dos jogos\n" +
 					"12 - Verifica se possui caminho euleriano\n"+
 					"13 - Verifica coloração de vértices \n"+
 					"14 - Encerrar aplicação\n"+
